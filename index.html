@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Pernikahan Rina & Budi</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #fffafc;
+      color: #4a4a4a;
+    }
+    #opening {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ffd1dc 0%, #a6c1ee 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeOut 1s ease-out forwards;
+      animation-delay: 3s;
+    }
+    #opening h1 {
+      font-size: 2.5em;
+      color: white;
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+    @keyframes fadeIn {
+      from {opacity:0;}
+      to {opacity:1;}
+    }
+    header {
+      background: linear-gradient(135deg, #a6c1ee 0%, #ffd1dc 100%);
+      text-align: center;
+      padding: 60px 20px;
+      color: #fff;
+    }
+    header h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+    section {
+      padding: 60px 20px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease-out;
+    }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .gallery img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 10px;
+      margin: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .map iframe {
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+    }
+    #countdown {
+      font-size: 1.5em;
+      color: #a6c1ee;
+      margin-top: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 0 auto;
+      gap: 15px;
+    }
+    input, select, textarea {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      background: #a6c1ee;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #8faee3;
+    }
+    #music-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ffd1dc;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    footer {
+      background: #4a4a4a;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="opening">
+  <h1>Selamat Datang, Tamu Undangan</h1>
+  <p style="color:white;">Rina & Budi Wedding</p>
+</div>
+
+<header>
+  <h1>Rina & Budi</h1>
+  <p>28 Juli 2025 • Jakarta</p>
+  <div id="countdown"></div>
+</header>
+
+<section id="ayat">
+  <h2>Bismillahirrahmanirrahim</h2>
+  <p>“Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup ...” (QS. Ar-Rum: 21)</p>
+</section>
+
+<section id="gallery" class="gallery">
+  <h2>Galeri Foto</h2>
+  <img src="https://via.placeholder.com/250x250/ffd1dc/ffffff?text=Foto+1" alt="Foto 1">
+  <img src="https://via.placeholder.com/250x250/a6c1ee/ffffff?text=Foto+2" alt="Foto 2">
+  <img src="https://via.placeholder.com/250x250/ffd1dc/ffffff?text=Foto+3" alt="Foto 3">
+</section>
+
+<section id="map" class="map">
+  <h2>Lokasi Acara</h2>
+  <iframe src="https://maps.google.com/maps?q=Monas%20Jakarta&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+</section>
+
+<section id="rsvp">
+  <h2>Konfirmasi Kehadiran</h2>
+  <form id="rsvpForm" name="submit-to-google-sheet">
+    <input type="text" name="nama" placeholder="Nama Anda" required>
+    <select name="kehadiran" required>
+      <option value="">Pilih Kehadiran</option>
+      <option value="Hadir">Hadir</option>
+      <option value="Tidak Hadir">Tidak Hadir</option>
+    </select>
+    <textarea name="pesan" rows="3" placeholder="Ucapan / Pesan"></textarea>
+    <button type="submit">Kirim Konfirmasi</button>
+  </form>
+  <p id="msg"></p>
+</section>
+
+<audio id="bg-music" autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+</audio>
+<button id="music-control">⏸</button>
+
+<footer>
+  <p>© 2025 Rina & Budi. Semua Hak Dilindungi.</p>
+</footer>
+
+<script>
+// Countdown
+const targetDate = new Date("July 28, 2025 09:00:00").getTime();
+const countdownEl = document.getElementById("countdown");
+setInterval(() => {
+  const now = new Date().getTime();
+  const distance = targetDate - now;
+  if (distance < 0) {
+    countdownEl.innerHTML = "Hari Pernikahan Telah Tiba!";
+    return;
+  }
+  const days = Math.floor(distance / (1000*60*60*24));
+  const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((distance % (1000*60)) / 1000);
+  countdownEl.innerHTML = `${days}h ${hours}j ${minutes}m ${seconds}d`;
+}, 1000);
+
+// Scroll reveal
+const sections = document.querySelectorAll("section");
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.1 });
+sections.forEach(sec => observer.observe(sec));
+
+// Music toggle
+const music = document.getElementById("bg-music");
+const musicBtn = document.getElementById("music-control");
+musicBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    musicBtn.textContent = "⏸";
+  } else {
+    music.pause();
+    musicBtn.textContent = "▶";
+  }
+});
+
+// Form ke Google Sheets
+const scriptURL = "MASUKKAN_GOOGLE_SCRIPT_URL_MU_DISINI";
+const form = document.forms['submit-to-google-sheet'];
+const msg = document.getElementById('msg');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+    .then(response => {
+      msg.innerHTML = "Terima kasih! Konfirmasi kamu sudah terkirim.";
+      form.reset();
+    })
+    .catch(error => {
+      msg.innerHTML = "Terjadi kesalahan, coba lagi.";
+    });
+});
+</script>
+</body>
+</html>
